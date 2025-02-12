@@ -1,2 +1,2 @@
 # Ray-Tracing
-Geometrical optics ray tracing simulation
+Geometrical optics ray tracing simulation.
