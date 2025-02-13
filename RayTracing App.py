@@ -8,23 +8,12 @@ from scipy.optimize import fsolve
 from matplotlib.widgets import Cursor
 import math
 
+from lens_params import *
+from source import *
 
-#Source set
-d = 30*1e-6 #space between apexes, um
-x_c = 0 #center point of the first lens
-y0 = 0 #beam offset in y-axis
-E = 9.25 #float(input("Enter in '12.0' format, from 1 to 60 keV (step 0.5): ")) #input()
-source_size = 11.727*1e-6
-divergence = 28.3*1e-5
 
 #Determines the quality of the plot
 point_num=120
-
-# Lens set, all units in um:
-R500 = {'radius': 500*1e-6, 'aperture': 1393*1e-6}
-R200 = {'radius': 200*1e-6, 'aperture': 800*1e-6}
-R100 = {'radius': 100*1e-6, 'aperture': 600*1e-6}
-R50 = {'radius': 50*1e-6, 'aperture': 440*1e-6}
 
 #output index of refraction and total linear coefficient from csv
 dataframe = pd.read_csv('C:/Users/askor/OneDrive/Рабочий стол/Xoptics/2024/RayTracing App/materials/Be 2keV-100keV.csv', sep = ';')
