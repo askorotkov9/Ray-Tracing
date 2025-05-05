@@ -45,8 +45,8 @@ def bsf(aperture, nr, x_c, R, y0):
 tf1_lens_number = 60
 tf2_lens_number = 100
 tf1_start = 27
-tf2_start = 0.2604
-dist_crl = 600*1e-6
+tf2_start = 27#0.2604
+dist_crl = 400*1e-6#600*1e-6
 
 
 #TF1
@@ -57,7 +57,7 @@ tf1_set = {'asf1_1': asf1_1, 'bsf1_1': bsf1_1}
 
 
 for i in range(2, tf1_lens_number + 1):
-    asf_xc = 2 * tf1_set[f'bsf1_{i-1}'].get_surface_apex(R500['aperture']) - tf1_set[f'asf1_{i-1}'].get_surface_apex(x_c) + dist_crl
+    asf_xc = 2 * tf1_set[f'bsf1_{i-1}'].get_surface_apex(R500['aperture']/2) - tf1_set[f'asf1_{i-1}'].get_surface_apex(x_c) + dist_crl
     tf1_set[f'asf1_{i}'] = asf(aperture = R500['aperture']/2, nr = material_n, x_c = asf_xc, y0=y0, R = -R500['radius']) #воздух - линза
     bsf_xc = tf1_set[f'asf1_{i}'].get_surface_apex(x_c) + d/2
     tf1_set[f'bsf1_{i}'] = bsf(aperture = R500['aperture']/2, nr = 1.0, x_c = bsf_xc, y0=y0, R = R500['radius']) #воздух - линза (Be)
@@ -71,7 +71,7 @@ tf2_set = {'asf2_1': asf2_1, 'bsf2_1': bsf2_1}
 
 
 for i in range(2, tf2_lens_number + 1):
-    asf_xc = 2 * tf2_set[f'bsf2_{i-1}'].get_surface_apex(R500['aperture']) - tf2_set[f'asf2_{i-1}'].get_surface_apex(x_c) + dist_crl
+    asf_xc = 2 * tf2_set[f'bsf2_{i-1}'].get_surface_apex(R50['aperture']/2) - tf2_set[f'asf2_{i-1}'].get_surface_apex(x_c) + dist_crl
     tf2_set[f'asf2_{i}'] = asf(aperture = R50['aperture']/2, nr = material_n, x_c = asf_xc, y0=y0, R = -R50['radius']) #воздух - линза
     bsf_xc = tf2_set[f'asf2_{i}'].get_surface_apex(x_c) + d/2
     tf2_set[f'bsf2_{i}'] = bsf(aperture = R50['aperture']/2, nr = 1.0, x_c = bsf_xc, y0=y0, R = R50['radius']) #воздух - линза (Be)
@@ -85,7 +85,7 @@ ax1.grid()
 
 
 tf1_input = []
-tf2_input = [2, 5, 6, 7, 9, 11, 14, 16, 17, 18, 22, 25, 26, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 43, 45, 46, 47, 49, 50]
+tf2_input = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]#	5, 6, 7, 9, 11, 14, 16, 17, 18, 22, 25, 26, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 43, 45, 46, 47, 49, 50, 51, 52, 53, 54, 55, 57, 61, 62, 63, 68, 71, 72, 73, 75, 76, 77, 78, 79, 81, 82, 83, 85, 86, 87, 89, 90, 91, 92, 93, 96, 97, 99, 100]#11, 14, 16, 17, 18, 22, 25, 26, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 43, 45, 46, 47, 49, 50]
 
 tf1_set_input = {}
 tf2_set_input = {}
@@ -99,22 +99,21 @@ for i in tf1_input:
 for i in tf2_input:
 	tf2_set_input[f'asf2_{i}'] = tf2_set[f'asf2_{i}']
 	tf2_set_input[f'bsf2_{i}'] = tf2_set[f'bsf2_{i}']
-
 	
 
 def ray_tf1_intersection(ray, g):
-	tf1_set[f'asf1_{g}'].intersection(ray, t_min=0, t_max=50, prev_n=None)
-	tf1_set[f'bsf1_{g}'].intersection(ray, t_min=0, t_max=50, prev_n=tf1_set[f'asf1_{g}'].n_r)
-	tf1_set[f'asf1_{g}'].render(ax1)
-	tf1_set[f'bsf1_{g}'].render(ax1)
+	tf1_set_input[f'asf1_{g}'].intersection(ray, t_min=0, t_max=50, prev_n=None)
+	tf1_set_input[f'bsf1_{g}'].intersection(ray, t_min=0, t_max=50, prev_n=tf1_set[f'asf1_{g}'].n_r)
+	tf1_set_input[f'asf1_{g}'].render(ax1)
+	tf1_set_input[f'bsf1_{g}'].render(ax1)
 
 
 
 def ray_tf2_intersection(ray, l):
-	tf2_set[f'asf2_{l}'].intersection(ray, t_min=0, t_max=50, prev_n=None)
-	tf2_set[f'bsf2_{l}'].intersection(ray, t_min=0, t_max=50, prev_n=tf2_set[f'asf2_{l}'].n_r)
-	tf2_set[f'asf2_{l}'].render(ax1)
-	tf2_set[f'bsf2_{l}'].render(ax1)
+	tf2_set_input[f'asf2_{l}'].intersection(ray, t_min=0, t_max=50, prev_n=None)
+	tf2_set_input[f'bsf2_{l}'].intersection(ray, t_min=0, t_max=50, prev_n=tf2_set[f'asf2_{l}'].n_r)
+	tf2_set_input[f'asf2_{l}'].render(ax1)
+	tf2_set_input[f'bsf2_{l}'].render(ax1)
 
 
 
@@ -133,7 +132,7 @@ for i in range(y_start.shape[0]):
             for l in range(1, int(length_tf2) + 1):
                 ray_tf2_intersection(ray, l)
         
-        ray.render_all(ax1, time_of_flights = 2)
+        ray.render_all(ax1, time_of_flights = 30)
 
 
 ax1.set_xlabel('x, m')
